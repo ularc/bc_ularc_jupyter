@@ -1,11 +1,7 @@
 ---
 cluster:
-  - "ascend"
-  - "pitzer"
-  - "kubernetes"
-  - "kubernetes-test"
-  - "kubernetes-dev"
-  - "cardinal"
+  - "zurada"
+
 form:
   - auto_accounts
   - mode
@@ -17,6 +13,7 @@ form:
   - num_cores
   - jupyter_version
   - bc_email_on_started
+
 attributes:
   jupyter_version:
     widget: 'select'
