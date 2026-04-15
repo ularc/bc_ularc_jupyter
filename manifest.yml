@@ -4,12 +4,8 @@ category: Interactive Apps
 subcategory: Servers
 role: batch_connect
 description: |
-  Launch a [Jupyter] server with [Python] on [Cardinal], [Ascend], or [Pitzer].
-  Check the [Changelog] for the recent updates.
+  Launch a [Jupyter] server with [Python] on [Zurada]. This is in Development
 
   [Jupyter]: https://jupyter.org/
   [Python]: https://www.python.org/
-  [Cardinal]: https://www.osc.edu/resources/technical_support/supercomputers/cardinal
-  [Ascend]: https://www.osc.edu/resources/technical_support/supercomputers/ascend
-  [Pitzer]: https://www.osc.edu/resources/technical_support/supercomputers/pitzer
-  [Changelog]: https://github.com/OSC/bc_osc_jupyter/releases
+  [Zurada]: https://ularc.github.io/zurada
