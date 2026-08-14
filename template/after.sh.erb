@@ -1,11 +1,30 @@
-<% if context.cluster !~ /kubernetes/ -%>
-# Wait for the Jupyter server to start
+# 1. Re-define the port-checking functions directly in this script's scope
+port_used_nc(){
+  nc -w 2 "$1" "$2" < /dev/null > /dev/null 2>&1
+}
+port_used_lsof(){
+  lsof -i :"$2" >/dev/null 2>&1
+}
+port_used_bash(){
+  (: < /dev/tcp/$1/$2) >/dev/null 2>&1
+}
+port_used_python(){
+  python -c "import socket, sys; sys.exit(0 if socket.socket().connect_ex(('$1', int($2))) == 0 else 1)" >/dev/null 2>&1
+}
+port_used_python3(){
+  python3 -c "import socket, sys; sys.exit(0 if socket.socket().connect_ex(('$1', int($2))) == 0 else 1)" >/dev/null 2>&1
+}
+
+port_used () {
+  port_used_nc "$1" "$2" || port_used_lsof "$1" "$2" || port_used_bash "$1" "$2" || port_used_python "$1" "$2" || port_used_python3 "$1" "$2"
+}
+
+# 2. Wait for the Jupyter server to start
 echo "Waiting for Jupyter server to open port ${port}..."
-if wait_until_port_used "${host}:${port}" 600; then
+if wait_until_port_used "127.0.0.1:${port}" 600; then
   echo "Discovered Jupyter server listening on port ${port}!"
 else
   echo "Timed out waiting for Jupyter server to open port ${port}!"
   clean_up 1
 fi
 sleep 2
-<% end -%>

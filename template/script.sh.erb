@@ -1,37 +1,33 @@
-# #!/usr/bin/env bash
+#!/usr/bin/env bash
 
-# echo "Starting main script..."
-# echo "TTT - $(date)"
+echo "Script starting..."
 
-# #
-# # Start Jupyter server
-# #
+# 1. Environment cleanup
+module purge 2>/dev/null
+export PATH="/usr/bin:/bin:/usr/sbin:/sbin:${PATH}"
 
-# # Clean the environment
-# module purge
+# 2. Load miniforge
+module load <%= context.modules %> 2>/dev/null
 
-# # Required modules
-# <%- unless context.cuda_version.empty? || context.cuda_version == 'none' -%>
-# module load <%= context.cuda_version %>
-# <%- end -%>
+# 3. Activate Conda environment
+source /mnt/apps/manual/miniforge3/25.3.1-0_gcc-11.4.1/etc/profile.d/conda.sh
+conda activate "${HOME}/.conda/envs/jupyter_env"
 
-# # Set working directory to notebook root directory
-# cd "${NOTEBOOK_ROOT}"
+export PATH="${HOME}/.conda/envs/jupyter_env/bin:${PATH}"
 
-# # Setup Jupyter environment
-# module load project/ondemand app_jupyter/<%= context.jupyter_version %>
+# 4. Set working directory
+export JUPYTER_DIR="<%= context.working_dir.blank? ? $HOME : context.working_dir %>"
+cd "${JUPYTER_DIR}"
 
-# module list
-# export JUPYTER_PATH="${PWD}/share/jupyter:${OSC_JUPYTER_PATH}"
+# 5. Determine launch command
+if [ "<%= context.mode %>" == "1" ]; then
+  export JUPYTER_ENABLE_LAB=1
+  JUPYTER_CMD="jupyter lab"
+else
+  export JUPYTER_ENABLE_LAB=0
+  JUPYTER_CMD="jupyter notebook"
+fi
 
-# echo "TTT - $(date)"
-
-# # List available kernels for debugging purposes
-# set -x
-# jupyter kernelspec list
-# { set +x; } 2>/dev/null
-# echo "TTT - $(date)"
-
-# # Launch the Jupyter server
-# set -x
-# jupyter <%= context.mode == "1" ? 'lab' : 'notebook' %> --config="${CONFIG_FILE}"
+# 6. Launch Jupyter Server
+set -x
+${JUPYTER_CMD} --config="${CONFIG_FILE}" <%= context.extra_jupyter_args %>
