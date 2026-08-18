@@ -1,3 +1,22 @@
+<%-
+  user = ENV['USER']
+  env_path = "/work/#{user}/.conda/envs/jupyter_env"
+  conda_bin = "/mnt/apps/manual/miniforge3/25.3.1-0_gcc-11.4.1/bin/conda"
+
+  # Auto-build Jupyter environment on submit node if missing
+  unless Dir.exist?(env_path)
+    pkgs_dir = "/work/#{user}/.conda/pkgs"
+    tmp_dir = "/work/#{user}/tmp"
+    
+    # 1. Create storage directories on /work to bypass home disk quota
+    system("mkdir -p '#{pkgs_dir}' '#{tmp_dir}'")
+    
+    # 2. Build JupyterLab and ipykernel environment
+    build_cmd = "CONDA_PKGS_DIRS='#{pkgs_dir}' TMPDIR='#{tmp_dir}' #{conda_bin} create --prefix '#{env_path}' -c conda-forge jupyterlab ipykernel -y"
+    system(build_cmd)
+  end
+-%>
+
 ---
 batch_connect:
   template: "basic"
