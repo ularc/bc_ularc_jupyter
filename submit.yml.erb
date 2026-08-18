@@ -12,7 +12,7 @@
     system("mkdir -p '#{pkgs_dir}' '#{tmp_dir}'")
     
     # 2. Build JupyterLab and ipykernel environment
-    build_cmd = "CONDA_PKGS_DIRS='#{pkgs_dir}' TMPDIR='#{tmp_dir}' #{conda_bin} create --prefix '#{env_path}' -c conda-forge jupyterlab ipykernel -y"
+    build_cmd = "CONDA_PKGS_DIRS='#{pkgs_dir}' TMPDIR='#{tmp_dir}' #{conda_bin} create --prefix '#{env_path}' -c conda-forge jupyterlab notebook ipykernel -y"
     system(build_cmd)
   end
 -%>
