@@ -22,6 +22,8 @@ batch_connect:
   template: "basic"
 script:
   native:
+    - "--job-name"
+    - "<%= bc_job_name %>"
     - "-N"
     - "<%= bc_num_slots.blank? ? 1 : bc_num_slots.to_i %>"
 #    - "-C"

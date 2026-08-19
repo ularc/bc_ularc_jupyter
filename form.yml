@@ -2,6 +2,10 @@
 cluster: "zurada"
 
 attributes:
+  bc_job_name:
+    value: "jupyter"
+    label: "Job Name"
+    required: true
   modules: 
     value: "miniforge3"
     label: "Modules to load"
@@ -22,6 +26,7 @@ attributes:
     help: "Select your project directory; defaults to $HOME"
 
 form:
+  - bc_job_name
   - modules
   - extra_jupyter_args
   - mode
